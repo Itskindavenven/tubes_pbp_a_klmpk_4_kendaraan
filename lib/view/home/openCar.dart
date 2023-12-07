@@ -29,45 +29,44 @@ class _OpenCarPageState extends State<OpenCarPage> {
   String pickupDate = '';
   String returnDate = '';
   String location = '';
+  int id_cart = 0;
 
   @override
-  void initStatePickDate() {
+  void initStateId() {
     super.initState();
-    getPickupDate();
-  }
-
-  Future<void> getPickupDate() async {
-    final cart = await CartClient.find(widget.id);
-    setState(() {
-      pickupDate = cart.pickup_date;
+    Future.delayed(Duration.zero, () async {
+      final cart = await CartClient.find(widget.id);
+      setState(() {
+        id_cart = cart.id!;
+      });
     });
   }
 
-  @override
-  void initStateReturnDate() {
-    super.initState();
-    getReturnDate();
-  }
+  // @override
+  // void initStateReturnDate() {
+  //   super.initState();
+  //   getReturnDate();
+  // }
 
-  Future<void> getReturnDate() async {
-    final cart = await CartClient.find(widget.id);
-    setState(() {
-      returnDate = cart.return_date;
-    });
-  }
+  // Future<void> getReturnDate() async {
+  //   final cart = await CartClient.find(widget.id);
+  //   setState(() {
+  //     returnDate = cart.return_date;
+  //   });
+  // }
 
-  @override
-  void initStateLoc() {
-    super.initState();
-    getLoc();
-  }
+  // @override
+  // void initStateLoc() {
+  //   super.initState();
+  //   getLoc();
+  // }
 
-  Future<void> getLoc() async {
-    final cart = await CartClient.find(widget.id);
-    setState(() {
-      pickupDate = cart.location;
-    });
-  }
+  // Future<void> getLoc() async {
+  //   final cart = await CartClient.find(widget.id);
+  //   setState(() {
+  //     pickupDate = cart.location;
+  //   });
+  // }
 
   Future<List<Map<String, dynamic>>> getSpecifications() async {
     final cart = await CartClient.find(widget.id);
@@ -544,15 +543,15 @@ class _OpenCarPageState extends State<OpenCarPage> {
               Row(
                 children: [
                   Expanded(
-                    child: buildSpecCard(
-                        Icons.calendar_today, 'Start', pickupDate),
+                    child: buildSpecCard(Icons.calendar_today, 'Start',
+                        cart[id_cart].pickup_date),
                   ),
                   const SizedBox(width: 10),
                   Expanded(
                     child: buildSpecCard(
                       Icons.calendar_today,
                       'End',
-                      returnDate,
+                      cart[id_cart].return_date,
                     ),
                   ),
                 ],
@@ -569,7 +568,7 @@ class _OpenCarPageState extends State<OpenCarPage> {
               buildSpecCard(
                 Icons.location_on,
                 '',
-                location,
+                cart[id_cart].location,
               ),
               const SizedBox(height: 10),
               const Text(
@@ -580,16 +579,26 @@ class _OpenCarPageState extends State<OpenCarPage> {
                 ),
               ),
               const SizedBox(height: 10),
-              buildSpecCard(
-                Icons.credit_card,
-                'MasterCard',
-                '**** **** 1234 5678',
+              GestureDetector(
+                onTap: () {
+                  // Aksi yang akan dilakukan saat kartu ditekan
+                },
+                child: buildSpecCard(
+                  Icons.credit_card,
+                  'MasterCard',
+                  '**** **** 1234 5678',
+                ),
               ),
               const SizedBox(height: 10),
-              buildSpecCard(
-                Icons.scanner,
-                '',
-                'SCAN QR',
+              GestureDetector(
+                onTap: () {
+                  // Aksi yang akan dilakukan saat kartu ditekan
+                },
+                child: buildSpecCard(
+                  Icons.qr_code,
+                  'Scan QR',
+                  'QRIS',
+                ),
               ),
               const SizedBox(height: 20),
               Row(
@@ -606,18 +615,6 @@ class _OpenCarPageState extends State<OpenCarPage> {
                       // Add functionality for Print PDF
                     },
                     child: const Text('Print PDF'),
-                  ),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      primary: const Color.fromRGBO(127, 90, 240, 1),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
-                    ),
-                    onPressed: () {
-                      // Add functionality for Booking
-                    },
-                    child: const Text('Booking'),
                   ),
                 ],
               ),
