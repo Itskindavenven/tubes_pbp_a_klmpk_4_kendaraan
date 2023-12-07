@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:tubes_ui/view/login/login.dart';
-import 'package:tubes_ui/view/profile/contactUs.dart';
-import 'package:tubes_ui/view/profile/friendList.dart';
-import 'package:tubes_ui/view/profile/payment/payment.dart';
-import 'package:tubes_ui/view/profile/editProfile.dart';
-import 'package:tubes_ui/view/profile/notification.dart';
-import 'package:tubes_ui/view/profile/promo.dart';
-import 'package:tubes_ui/view/profile/settings/settings.dart';
+import 'package:pbp_widget_a_klmpk4/view/login/login.dart';
+import 'package:pbp_widget_a_klmpk4/view/profile/contactUs.dart';
+import 'package:pbp_widget_a_klmpk4/view/profile/friendList.dart';
+import 'package:pbp_widget_a_klmpk4/view/profile/payment/payment.dart';
+import 'package:pbp_widget_a_klmpk4/view/profile/editProfile.dart';
+import 'package:pbp_widget_a_klmpk4/view/profile/notification.dart';
+import 'package:pbp_widget_a_klmpk4/view/profile/promo.dart';
+import 'package:pbp_widget_a_klmpk4/view/profile/settings/settings.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -168,7 +168,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     onTap: () {
                       Navigator.pushReplacement(
                         context,
-                        MaterialPageRoute(builder: (context) => LoginPage()),
+                        MaterialPageRoute(builder: (context) => LoginView()),
                       );
                     },
                   ),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tubes_ui/view/profile/profile.dart';
+import 'package:pbp_widget_a_klmpk4/view/profile/profile.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ContactUsPage extends StatefulWidget {

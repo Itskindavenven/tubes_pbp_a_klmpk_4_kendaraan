@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tubes_ui/view/profile/profile.dart';
-import 'package:tubes_ui/view/profile/settings/language.dart';
+import 'package:pbp_widget_a_klmpk4/view/profile/profile.dart';
+import 'package:pbp_widget_a_klmpk4/view/profile/settings/language.dart';
 
 class SettingsPage extends StatefulWidget {
   @override

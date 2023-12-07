@@ -1,4 +1,4 @@
-name: tubes_ui
+name: pbp_widget_a_klmpk4
 description: A new Flutter project.
 publish_to: 'none'
 version: 0.1.0
@@ -9,9 +9,29 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
-  url_launcher: ^6.0.12
-  font_awesome_flutter: ^9.2.0
+  font_awesome_flutter: ^9.1.0
+  provider: ^6.0.0
+  sqflite: ^2.2.6
+  flutter_slidable: ^0.6.0
+  shared_preferences: any
+  mobile_scanner: ^3.2.0
+  path: any
+  path_provider: ^2.0.15
+  qr_flutter: ^4.1.0
+  camera: ^0.10.5+2
+  cupertino_icons: ^1.0.2
+  geolocator: ^10.1.0
+  geocoding: ^2.1.1
+  audioplayers: ^5.2.0
+  pdf: ^3.6.4
+  printing: ^5.9.0
+  image_picker: ^1.0.4
+  intl: ^0.17.0
+  barcode_widget: ^2.0.4
+  uuid: ^3.0.6
+  responsive_sizer: ^3.2.0
+  flutter_svg: ^2.0.9 
+  url_launcher: any
 
 dev_dependencies:
   flutter_test:
@@ -19,7 +39,15 @@ dev_dependencies:
   flutter_lints: ^2.0.0
 
 flutter:
+  fonts:
+    - family: Poppins
+      fonts:
+        - asset: fonts/Poppins-Regular.ttf
+        - asset: fonts/Poppins-Bold.ttf
+
   assets:
+    - images/
+    - assets/
     - assets/images/gojohh.jpg
     - assets/images/promo.jpeg
     - assets/images/car1.jpeg

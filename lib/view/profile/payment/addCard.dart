@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tubes_ui/view/profile/payment/payment.dart';
+import 'package:pbp_widget_a_klmpk4/view/profile/payment/payment.dart';
 
 class AddCardPage extends StatefulWidget {
   @override
