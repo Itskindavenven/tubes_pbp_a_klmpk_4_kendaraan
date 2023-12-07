@@ -4,6 +4,10 @@ import 'package:pbp_widget_a_klmpk4/view/home/bookCar.dart';
 import 'package:pbp_widget_a_klmpk4/entity/cart.dart';
 import 'package:pbp_widget_a_klmpk4/entity/car.dart';
 import 'package:pbp_widget_a_klmpk4/client/CartClient.dart';
+import 'package:pbp_widget_a_klmpk4/scanner/scan_qr.dart';
+import 'package:pbp_widget_a_klmpk4/pdf/pdf_view.dart';
+import 'package:pbp_widget_a_klmpk4/view/home/home.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class OpenCarPage extends StatefulWidget {
   OpenCarPage(
@@ -580,8 +584,25 @@ class _OpenCarPageState extends State<OpenCarPage> {
               ),
               const SizedBox(height: 10),
               GestureDetector(
-                onTap: () {
+                onTap: () async {
+                  final cart = await CartClient.find(widget.id);
+                  id_cart = cart.id!;
+                  print(id_cart);
                   // Aksi yang akan dilakukan saat kartu ditekan
+                  await CartClient.destroy(id_cart);
+                  Fluttertoast.showToast(
+                      msg: 'Pembayaran berhasil!',
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.BOTTOM,
+                      backgroundColor:
+                          Colors.green, // Warna latar belakang toast
+                      textColor: Colors.white);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const Homepage(),
+                    ),
+                  );
                 },
                 child: buildSpecCard(
                   Icons.credit_card,
@@ -591,8 +612,17 @@ class _OpenCarPageState extends State<OpenCarPage> {
               ),
               const SizedBox(height: 10),
               GestureDetector(
-                onTap: () {
+                onTap: () async {
+                  final cart = await CartClient.find(widget.id);
+                  id_cart = cart.id!;
+                  print(id_cart);
                   // Aksi yang akan dilakukan saat kartu ditekan
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            BarcodeScannerPageView(id: id_cart)), // Mengarahkan ke PaymentPage
+                  );
                 },
                 child: buildSpecCard(
                   Icons.qr_code,
@@ -611,8 +641,16 @@ class _OpenCarPageState extends State<OpenCarPage> {
                         borderRadius: BorderRadius.circular(20.0),
                       ),
                     ),
-                    onPressed: () {
+                    onPressed: () async {
                       // Add functionality for Print PDF
+                      createPdf(
+                          cart[id_cart].location,
+                          cart[id_cart].carName,
+                          cart[id_cart].price!,
+                          cart[id_cart].pickup_date,
+                          cart[id_cart].return_date,
+                          id_cart,
+                          context);
                     },
                     child: const Text('Print PDF'),
                   ),

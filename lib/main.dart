@@ -4,6 +4,7 @@ import 'package:pbp_widget_a_klmpk4/theme.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:pbp_widget_a_klmpk4/view/onboarding.dart';
+import 'package:pbp_widget_a_klmpk4/pdf/pdf_view.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
