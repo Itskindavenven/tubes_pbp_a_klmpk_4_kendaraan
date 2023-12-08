@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:pbp_widget_a_klmpk4/view/home/home.dart';
 import 'package:pbp_widget_a_klmpk4/view/home/pay.dart';
@@ -5,6 +7,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:pbp_widget_a_klmpk4/entity/cart.dart';
 import 'package:pbp_widget_a_klmpk4/client/CartClient.dart';
+import 'package:intl/intl.dart';
 
 class BookCarPage extends StatefulWidget {
   BookCarPage(
@@ -58,8 +61,27 @@ class _BookCarPageState extends State<BookCarPage> {
     super.initState();
     _getCurrentLocation();
     print(widget.id);
-    
+
     locationController = TextEditingController(text: widget.location);
+    var pickData = {'pickup_date': widget.pickup_date};
+    String jsonPickup = jsonEncode(pickData);
+
+    // Menghapus tanda kurung kurawal dan tanda kutip
+    String formattedPickup =
+        jsonPickup.replaceAll(RegExp(r'[{pickup_date:}"]'), '');
+    pickupDateController = TextEditingController(text: formattedPickup);
+    print(
+        pickupDateController.text); // Hasilnya: pickup_date:widget.pickup_date
+
+    var returnData = {'return_date': widget.return_date};
+    String jsonReturn = jsonEncode(returnData);
+
+    // Menghapus tanda kurung kurawal dan tanda kutip
+    String formattedReturn =
+        jsonReturn.replaceAll(RegExp(r'[{return_date:}"]'), '');
+    returnDateController = TextEditingController(text: formattedReturn);
+    print(
+        returnDateController.text); // Hasilnya: return_date:widget.return_date
   }
 
   Future<Position> _getCurrentLocation() async {
@@ -103,7 +125,8 @@ class _BookCarPageState extends State<BookCarPage> {
     if (picked != pickupDate)
       setState(() {
         pickupDate = picked;
-        pickupDateController.text = "${pickupDate!.toLocal()}";
+        pickupDateController.text =
+            "${pickupDate!.day}/${pickupDate!.month}/${pickupDate!.year}";
       });
   }
 
@@ -140,7 +163,7 @@ class _BookCarPageState extends State<BookCarPage> {
                     },
                   ),
                   const Text(
-                    'Date & Time',
+                    '',
                     style:
                         TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
                   ),
@@ -230,7 +253,7 @@ class _BookCarPageState extends State<BookCarPage> {
                         border: UnderlineInputBorder(),
                       ),
                       child: pickupDate == null
-                          ? const Text('Select Date')
+                          ? Text(pickupDateController.text)
                           : Text(
                               "${pickupDate!.toLocal()}".split(' ')[0],
                             ),
@@ -253,7 +276,7 @@ class _BookCarPageState extends State<BookCarPage> {
                         border: UnderlineInputBorder(),
                       ),
                       child: returnDate == null
-                          ? const Text('Select Date')
+                          ? Text(returnDateController.text)
                           : Text(
                               "${returnDate!.toLocal()}".split(' ')[0],
                             ),

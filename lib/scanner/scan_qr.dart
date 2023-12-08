@@ -7,7 +7,8 @@ import 'package:pbp_widget_a_klmpk4/client/CartClient.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class BarcodeScannerPageView extends StatefulWidget {
-  BarcodeScannerPageView({Key? key, 
+  BarcodeScannerPageView({
+    Key? key,
     this.id,
   }) : super(key: key);
 
@@ -21,9 +22,12 @@ class _BarcodeScannerPageViewState extends State<BarcodeScannerPageView>
   BarcodeCapture? barcodeCapture;
   bool isScanning = true;
 
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: Colors.black,
       body: PageView(
         children: [
@@ -131,7 +135,6 @@ class _BarcodeScannerPageViewState extends State<BarcodeScannerPageView>
             TextButton(
               child: const Text('OK'),
               onPressed: () async {
-                // Tambahkan kata kunci async di sini
                 Navigator.of(context).pop();
                 scannerController;
                 setState(() {
@@ -145,11 +148,9 @@ class _BarcodeScannerPageViewState extends State<BarcodeScannerPageView>
                   textColor: Colors.white, // Warna teks toast
                 );
                 final cart = await CartClient.find(widget.id);
-                print(cart.id);
-                // Aksi yang akan dilakukan saat kartu ditekan
                 await CartClient.destroy(cart.id);
                 Navigator.push(
-                  context,
+                  _scaffoldKey.currentContext!,
                   MaterialPageRoute(
                     builder: (context) => const Homepage(),
                   ),

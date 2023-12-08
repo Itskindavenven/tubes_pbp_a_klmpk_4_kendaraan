@@ -1,6 +1,10 @@
 import 'dart:typed_data';
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:pbp_widget_a_klmpk4/entity/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:pbp_widget_a_klmpk4/view/login/login.dart';
 import 'package:pbp_widget_a_klmpk4/view/profile/bookmark.dart';
@@ -26,6 +30,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Map<String, dynamic>? userData;
   Uint8List? userImage;
 
+
   Future<void> takeUser() async {
     int userId;
     userId = await getPrefsId();
@@ -37,7 +42,7 @@ class _ProfilePageState extends State<ProfilePage> {
         print(userData);
         String base64Image = userData!['image'] ?? "default";
         if (base64Image != "default") {
-          userImage = Uint8List.fromList(base64Decode(base64Image));
+          userImage = base64Decode(base64Image);
         }
       });
     });
@@ -59,6 +64,63 @@ class _ProfilePageState extends State<ProfilePage> {
   void clearPrefsId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.remove('userId');
+  }
+
+  Future<void> editUser(int id) async {
+    try {
+      // Pastikan userImage tidak null dan gunakan userImage untuk kompresi
+      if (userImage != null) {
+        var compressedImage = await FlutterImageCompress.compressWithList(
+          userImage!,
+          minHeight: 128,
+          minWidth: 128,
+          quality: 10,
+        );
+        // Gunakan userImage langsung untuk objek User
+        User user = User(
+          id: userData!['id'],
+          username: userData!['username'] ?? "",
+          email: userData!['email'] ?? "",
+          password: userData!['password'] ?? "",
+          noTelp: userData!['noTelp'] ?? "",
+          tglLahir: userData!['tglLahir'] ?? "",
+          image: base64Encode(compressedImage),
+        );
+
+        await UserClient.update(user);
+      }
+    } catch (e) {
+      print('Error editing user: $e');
+    }
+  }
+
+  Future pickImageC() async {
+    try {
+      XFile? photo = await ImagePicker().pickImage(source: ImageSource.camera);
+
+      Uint8List imageBytes = await photo!.readAsBytes();
+      String base64Image = base64Encode(imageBytes);
+
+      setState(() => userData!['image'] = base64Image);
+    } on PlatformException catch (e) {
+      debugPrint('Failed to pick image: $e');
+    }
+  }
+
+  Future pickImage() async {
+    try {
+      XFile? photo = await ImagePicker().pickImage(source: ImageSource.gallery);
+
+      if (photo != null) {
+        Uint8List imageBytes = await photo.readAsBytes();
+        setState(() {
+          userImage = imageBytes;
+          userData!['image'] = base64Encode(userImage!);
+        });
+      }
+    } on PlatformException catch (e) {
+      debugPrint('Failed to pick image: $e');
+    }
   }
 
   @override
@@ -103,9 +165,30 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ),
               const SizedBox(height: 16.0),
-              const CircleAvatar(
-                radius: 50,
-                backgroundImage: AssetImage('assets/images/gojohh.jpg'),
+              // GestureDetector(
+              //   onTap: () async {
+              //     await pickImage();
+              //     editUser(userData!['id'] ?? "-1");
+              //   },
+              //   child: CircleAvatar(
+              //     radius: 50,
+              //     backgroundImage: userData!['image'] == "Default"
+              //         ? AssetImage('assets/images/gojohh.jpg')
+              //         : Image.memory(base64Decode(userData!['image'])).image,
+              //   ),
+              // ),
+
+              GestureDetector(
+                onTap: () async {
+                  await pickImage();
+                  editUser(userData!['id'] ?? -1);
+                },
+                child: CircleAvatar(
+                  radius: 50,
+                  backgroundImage: userData!['image'] == "default"
+                      ? AssetImage('assets/images/gojohh.jpg')
+                      : Image.memory(userImage!).image,
+                ),
               ),
               const SizedBox(height: 8.0),
               Center(

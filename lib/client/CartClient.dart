@@ -5,11 +5,11 @@ import 'dart:convert';
 import 'package:http/http.dart';
 
 class CartClient {
-  static final String url = '10.0.2.2:8000';
-  static final String endpoint = '/api';
+  // static final String url = '10.0.2.2:8000';
+  // static final String endpoint = '/api';
 
-  // static final String url = '192.168.100.48';
-  // static final String endpoint = '/api_pbp/public/api';
+  static final String url = '10.5.2.41';
+  static final String endpoint = 'api_pbp_tubes_sewa_mobil/public/api';
 
   static Future<int> getUserId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -170,6 +170,21 @@ class CartClient {
 
       print(response.statusCode);
       print(response.body);
+      if (response.statusCode != 200) throw Exception(response.reasonPhrase);
+
+      return response;
+    } catch (e) {
+      return Future.error(e.toString());
+    }
+  }
+
+  static Future<Response> updateIsReviewed(id) async {
+    try {
+      var response = await put(Uri.http(url, '$endpoint/cart/updateStatus/$id'),
+          headers: {"Content-Type": "application/json"},
+          body: jsonEncode({"isReviewed": 1}));
+
+      print('masuk ${response.body}');
       if (response.statusCode != 200) throw Exception(response.reasonPhrase);
 
       return response;

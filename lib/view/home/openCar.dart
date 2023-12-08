@@ -298,30 +298,6 @@ class _OpenCarPageState extends State<OpenCarPage> {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  Row(
-                    children: [
-                      Row(
-                        children: List.generate(
-                          5,
-                          (index) => const Icon(
-                            Icons.star,
-                            color: Colors.yellow,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 5),
-                      const Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Mobilnya enak sekali'),
-                          Text(
-                            'User',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
                   const SizedBox(height: 40),
                 ],
               ),
@@ -620,8 +596,8 @@ class _OpenCarPageState extends State<OpenCarPage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) =>
-                            BarcodeScannerPageView(id: id_cart)), // Mengarahkan ke PaymentPage
+                        builder: (context) => BarcodeScannerPageView(
+                            id: id_cart)), // Mengarahkan ke PaymentPage
                   );
                 },
                 child: buildSpecCard(

@@ -70,6 +70,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     emailController = TextEditingController(text: widget.userData['email']);
     dobController = TextEditingController(text: widget.userData['tglLahir']);
     noTelpController = TextEditingController(text: widget.userData['noTelp']);
+    String username = widget.userData['username'] ?? 'Guest';
   }
 
   @override
@@ -103,17 +104,17 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 ],
               ),
               const SizedBox(height: 16.0),
-              const Center(
+              Center(
                 child: Column(
                   children: [
-                    CircleAvatar(
-                      radius: 60,
-                      backgroundImage: AssetImage('assets/images/gojohh.jpg'),
-                    ),
+                    // CircleAvatar(
+                    //   radius: 60,
+                    //   backgroundImage: AssetImage('assets/images/gojohh.jpg'),
+                    // ),
                     SizedBox(height: 8.0),
                     Text(
-                      'Hello',
-                      style: TextStyle(fontSize: 20),
+                      'Hello ${widget.userData['username']}',
+                      style: TextStyle(fontSize: 30),
                     ),
                     SizedBox(height: 4.0),
                     Text(

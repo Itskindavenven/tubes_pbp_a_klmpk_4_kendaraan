@@ -31,7 +31,7 @@ class _LoginPageState extends State<LoginPage> {
     if (widget.data != null && widget.data!['registrationSuccess'] == true) {
       // Show a SnackBar
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        showSnackBar(context, "Register Berhasil!", Colors.green);
+        showToast("Register Berhasil!", Colors.green);
       });
     }
 
@@ -135,12 +135,10 @@ class _LoginPageState extends State<LoginPage> {
                         );
                       } else {
                         // ignore: use_build_context_synchronously
-                        showSnackBar(context, "Username atau Password Salah!",
-                            Colors.red);
+                        showToast("Username atau Password Salah!", Colors.red);
                       }
                     } catch (e) {
-                      showSnackBar(
-                          context, "Username atau Password Salah!", Colors.red);
+                      showToast("Username atau Password Salah!", Colors.red);
                     }
                   }
                 },
@@ -189,16 +187,16 @@ class _LoginPageState extends State<LoginPage> {
     prefs.setInt('userId', id ?? 0);
   }
 
-  // void showToast(String msg, Color color) {
-  //   Fluttertoast.showToast(
-  //       msg: msg,
-  //       toastLength: Toast.LENGTH_LONG,
-  //       gravity: ToastGravity.TOP,
-  //       backgroundColor: color,
-  //       textColor: Colors.white,
-  //       fontSize: 18,
-  //       timeInSecForIosWeb: 2);
-  // }
+  void showToast(String msg, Color color) {
+    Fluttertoast.showToast(
+        msg: msg,
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.TOP,
+        backgroundColor: color,
+        textColor: Colors.white,
+        fontSize: 18,
+        timeInSecForIosWeb: 2);
+  }
 
   void showSnackBar(BuildContext context, String msg, Color bg) {
     final scaffold = ScaffoldMessenger.of(context);
