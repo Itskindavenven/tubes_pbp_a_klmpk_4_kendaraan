@@ -1,24 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:pbp_widget_a_klmpk4/component/form_component.dart';
-import 'package:pbp_widget_a_klmpk4/view/login/login.dart';
-// import 'package:pbp_widget_a_klmpk4/database/sql_helper_user.dart';
+import 'package:flutter/services.dart';
 import 'package:pbp_widget_a_klmpk4/entity/user.dart';
-import 'package:pbp_widget_a_klmpk4/client/UserClient.dart';
-import 'package:pbp_widget_a_klmpk4/theme.dart';
-import 'package:provider/provider.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:pbp_widget_a_klmpk4/view/login/login.dart';
+import 'package:pbp_widget_a_klmpk4/client/userClient.dart';
 
-class RegisterView extends StatefulWidget {
-  const RegisterView({super.key});
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({Key? key}) : super(key: key);
 
   @override
-  State<RegisterView> createState() => _RegisterViewState();
+  _RegisterPageState createState() => _RegisterPageState();
 }
 
-class _RegisterViewState extends State<RegisterView> {
-  // TextEditingController firstNameController = TextEditingController();
-  // TextEditingController lastNameController = TextEditingController();
+class _RegisterPageState extends State<RegisterPage> {
+  final _formKey = GlobalKey<FormState>();
   TextEditingController usernameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController dobController = TextEditingController();
@@ -68,8 +62,12 @@ class _RegisterViewState extends State<RegisterView> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
+            child: Center(
+                child: SingleChildScrollView(
+                    child: Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: Form(
+        key: _formKey,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
@@ -79,45 +77,49 @@ class _RegisterViewState extends State<RegisterView> {
               style: TextStyle(
                 fontSize: 48,
                 fontWeight: FontWeight.bold,
-                color: Colors.blue,
+                color: Color.fromRGBO(127, 90, 240, 1),
               ),
             ),
             const SizedBox(
               height: 40,
             ),
-            // Row(
-            //   children: <Widget>[
-            //     Expanded(
-            //       child: TextFormField(
-            //         controller: firstNameController,
-            //         decoration: const InputDecoration(
-            //             labelText: 'First Name', border: OutlineInputBorder()),
-            //       ),
-            //     ),
-            //     const SizedBox(width: 10),
-            //     Expanded(
-            //       child: TextFormField(
-            //         controller: lastNameController,
-            //         decoration: const InputDecoration(
-            //             labelText: 'Last Name', border: OutlineInputBorder()),
-            //       ),
-            //     ),
-            //   ],
-            // ),
             TextFormField(
+              key: const Key("Username"),
               controller: usernameController,
               decoration: const InputDecoration(
-                  labelText: 'Username', border: OutlineInputBorder()),
+                labelText: 'Username',
+                border: OutlineInputBorder(),
+              ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Username Tidak Boleh Kosong';
+                }
+                if (value.length < 5) {
+                  return 'Username Tidak Boleh Kurang dari 5 karakter';
+                }
+                return null;
+              },
             ),
             const SizedBox(height: 20),
             TextFormField(
+              key: const Key("Email"),
               controller: emailController,
               decoration: const InputDecoration(
                   labelText: 'Email', border: OutlineInputBorder()),
               keyboardType: TextInputType.emailAddress,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Email Tidak Boleh Kosong';
+                }
+                if (!value.contains('@')) {
+                  return 'Email harus menggunakan @';
+                }
+                return null;
+              },
             ),
             const SizedBox(height: 20),
             TextFormField(
+              key: const Key("Password"),
               controller: passwordController,
               obscureText: !_isPasswordVisible,
               decoration: InputDecoration(
@@ -136,17 +138,38 @@ class _RegisterViewState extends State<RegisterView> {
                   },
                 ),
               ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return "password kosong";
+                }
+                if (value.length < 5) {
+                  return 'Password minimal 5 digit';
+                }
+                return null;
+              },
               // Validation logic can be added here
             ),
             const SizedBox(height: 20),
             TextFormField(
+              key: const Key("PhoneNumber"),
               controller: phoneNumberController,
               decoration: const InputDecoration(
                   labelText: 'Phone Number', border: OutlineInputBorder()),
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               keyboardType: TextInputType.phone,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Nomor Telepon Tidak Boleh Kosong';
+                }
+                if (value.length < 11) {
+                  return 'Nomor Telepon minimal 11 digit';
+                }
+                return null;
+              },
             ),
             const SizedBox(height: 20),
             TextFormField(
+              key: const Key("TglLahir"),
               controller: dobController,
               decoration: InputDecoration(
                 labelText: 'Date of Birth',
@@ -159,6 +182,12 @@ class _RegisterViewState extends State<RegisterView> {
                 ),
               ),
               readOnly: true,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Tanggal Lahir Tidak Boleh Kosong';
+                }
+                return null;
+              },
             ),
             const SizedBox(height: 10),
             ElevatedButton(
@@ -166,70 +195,81 @@ class _RegisterViewState extends State<RegisterView> {
                 backgroundColor: const Color.fromRGBO(127, 90, 240, 1),
               ),
               onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (_) => AlertDialog(
-                    title: const Text('Konfirmasi'),
-                    content: const Text(
-                        'Apakah sudah yakin dengan data yang diisi?'),
-                    actions: <Widget>[
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop(); // Close the dialog
-                        },
-                        child: const Text('Belum'),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          // Perform the registration
-                          final newUser = User(
-                            username: usernameController.text,
-                            email: emailController.text,
-                            password: passwordController.text,
-                            noTelp: phoneNumberController.text,
-                            tglLahir: dobController.text,
-                            image: 'default',
-                          );
+                if (_formKey.currentState!.validate()) {
+                  showDialog(
+                    context: context,
+                    builder: (_) => AlertDialog(
+                      title: const Text('Konfirmasi'),
+                      content: const Text(
+                          'Apakah sudah yakin dengan data yang diisi?'),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop(); // Close the dialog
+                          },
+                          child: const Text('Belum'),
+                        ),
+                        TextButton(
+                          onPressed: () async {
+                            // Perform the registration
+                            final newUser = User(
+                              username: usernameController.text,
+                              email: emailController.text,
+                              password: passwordController.text,
+                              noTelp: phoneNumberController.text,
+                              tglLahir: dobController.text,
+                              image: 'default',
+                            );
+                            print(newUser);
+                            await UserClient.register(newUser);
 
-                          UserClient.register(newUser);
-
-                          Navigator.of(context)
-                              .pop(); // Close the confirmation dialog
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const LoginView(
-                                    data: {'registrationSuccess': true})),
-                          );
-                        },
-                        child: const Text('Sudah'),
-                      ),
-                    ],
-                  ),
-                );
+                            // ignore: use_build_context_synchronously
+                            Navigator.of(context)
+                                .pop(); // Close the confirmation dialog
+                            // ignore: use_build_context_synchronously
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const LoginPage(
+                                  data: {'registrationSuccess': true},
+                                ),
+                              ),
+                            );
+                          },
+                          child: const Text('Sudah'),
+                        ),
+                      ],
+                    ),
+                  );
+                }
               },
               child: const Text('Register'),
             ),
             const SizedBox(height: 10),
             GestureDetector(
               onTap: () {
-                Navigator.pushReplacement(
+                Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const LoginView()),
+                  MaterialPageRoute(builder: (context) => const LoginPage()),
                 );
               },
-              child: const Text('Already have an account? Login'),
-            ),
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('Already have an account? '),
+                  Text(
+                    'Login',
+                    style: TextStyle(
+                      color: Color.fromRGBO(
+                          127, 90, 240, 1), // Warna ungu yang diinginkan
+                    ),
+                  ),
+                ],
+              ),
+            )
           ],
         ),
       ),
-    ));
-  }
-
-  void _togglePasswordVisibility() {
-    setState(() {
-      _isPasswordVisible = !_isPasswordVisible;
-      print(_isPasswordVisible);
-    });
+    )))));
   }
 }

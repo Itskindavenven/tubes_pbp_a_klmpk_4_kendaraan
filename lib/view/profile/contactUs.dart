@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:pbp_widget_a_klmpk4/view/profile/profile.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ContactUsPage extends StatefulWidget {
+  const ContactUsPage({super.key});
+
   @override
   _ContactUsPageState createState() => _ContactUsPageState();
 }
@@ -13,7 +14,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -22,24 +23,21 @@ class _ContactUsPageState extends State<ContactUsPage> {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => ProfilePage()),
-                      );
+                      Navigator.pop(context);
                     },
-                    child: Icon(Icons.arrow_back),
+                    child: const Icon(Icons.arrow_back),
                   ),
-                  Text(
+                  const Text(
                     'Contact Us',
                     style: TextStyle(
                       fontSize: 24.0,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(width: 40.0), 
+                  const SizedBox(width: 40.0),
                 ],
               ),
-              SizedBox(height: 20.0),
+              const SizedBox(height: 20.0),
               buildContactCard(
                 'E-mail',
                 'cs@carrent.com',
@@ -67,7 +65,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
 
   Widget buildContactCard(String title, String detail, IconData icon, Function() onTap) {
     return Card(
-      margin: EdgeInsets.only(bottom: 16.0),
+      margin: const EdgeInsets.only(bottom: 16.0),
       elevation: 2.0,
       child: ListTile(
         leading: Icon(icon),
@@ -77,10 +75,10 @@ class _ContactUsPageState extends State<ContactUsPage> {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Text(detail),
-            SizedBox(height: 5),
+            const SizedBox(height: 5),
             GestureDetector(
               onTap: onTap,
-              child: Icon(Icons.arrow_forward),
+              child: const Icon(Icons.arrow_forward),
             ),
           ],
         ),

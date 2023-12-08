@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pbp_widget_a_klmpk4/view/profile/settings/settings.dart';
 
 class LanguagePage extends StatelessWidget {
   @override
@@ -7,7 +6,7 @@ class LanguagePage extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -16,17 +15,14 @@ class LanguagePage extends StatelessWidget {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => SettingsPage()),
-                      );
+                      Navigator.pop(context);
                     },
-                    child: Icon(Icons.arrow_back),
+                    child: const Icon(Icons.arrow_back),
                   ),
                 ],
               ),
-              SizedBox(height: 10.0),
-              Center(
+              const SizedBox(height: 10.0),
+              const Center(
                 child: Text(
                   'Language',
                   style: TextStyle(
@@ -35,7 +31,7 @@ class LanguagePage extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: 20.0),
+              const SizedBox(height: 20.0),
               buildLanguageCard('English', 'US', context),
               buildLanguageCard('Indonesia', 'ID', context),
               buildLanguageCard('日本語', 'JP', context),
@@ -50,19 +46,17 @@ class LanguagePage extends StatelessWidget {
   Widget buildLanguageCard(
       String language, String countryCode, BuildContext context) {
     return Card(
-      margin: EdgeInsets.only(bottom: 16.0),
+      margin: const EdgeInsets.only(bottom: 16.0),
       elevation: 2.0,
       child: ListTile(
         title: Text(language),
         trailing: Image.asset(
-          'assets/flags/$countryCode.png', // Ganti dengan path gambar bendera yang sesuai
+          'assets/flags/$countryCode.png',
           width: 40.0,
           height: 40.0,
           fit: BoxFit.cover,
         ),
         onTap: () {
-          // Tambahkan logika pemilihan bahasa di sini, misalnya dengan menyimpan preferensi bahasa
-          // atau melakukan navigasi kembali ke halaman sebelumnya dengan membawa data bahasa yang dipilih
           Navigator.pop(context, language);
         },
       ),

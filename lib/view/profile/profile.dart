@@ -1,5 +1,9 @@
+import 'dart:typed_data';
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:pbp_widget_a_klmpk4/view/login/login.dart';
+import 'package:pbp_widget_a_klmpk4/view/profile/bookmark.dart';
 import 'package:pbp_widget_a_klmpk4/view/profile/contactUs.dart';
 import 'package:pbp_widget_a_klmpk4/view/profile/friendList.dart';
 import 'package:pbp_widget_a_klmpk4/view/profile/payment/payment.dart';
@@ -7,13 +11,56 @@ import 'package:pbp_widget_a_klmpk4/view/profile/editProfile.dart';
 import 'package:pbp_widget_a_klmpk4/view/profile/notification.dart';
 import 'package:pbp_widget_a_klmpk4/view/profile/promo.dart';
 import 'package:pbp_widget_a_klmpk4/view/profile/settings/settings.dart';
+import 'package:pbp_widget_a_klmpk4/client/userClient.dart';
+import 'package:pbp_widget_a_klmpk4/view/profile/subscribe/subscribe.dart';
+import 'package:pbp_widget_a_klmpk4/view/history/history.dart';
 
 class ProfilePage extends StatefulWidget {
+  const ProfilePage({super.key});
+
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  Map<String, dynamic>? userData;
+  Uint8List? userImage;
+
+  Future<void> takeUser() async {
+    int userId;
+    userId = await getPrefsId();
+    print(userId);
+    UserClient.find(userId).then((userDataFromDatabase) {
+      print("Response from server: $userDataFromDatabase");
+      setState(() {
+        userData = userDataFromDatabase.toJson();
+        print(userData);
+        String base64Image = userData!['image'] ?? "default";
+        if (base64Image != "default") {
+          userImage = Uint8List.fromList(base64Decode(base64Image));
+        }
+      });
+    });
+  }
+
+  @override
+  void initState() {
+    takeUser();
+    print("User: $userData");
+    super.initState();
+  }
+
+  getPrefsId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int id = await prefs.getInt('userId') ?? 0;
+    return id;
+  }
+
+  void clearPrefsId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove('userId');
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -26,9 +73,9 @@ class _ProfilePageState extends State<ProfilePage> {
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
                   children: [
-                    Icon(Icons.location_on),
-                    SizedBox(width: 8.0),
-                    Column(
+                    const Icon(Icons.location_on),
+                    const SizedBox(width: 8.0),
+                    const Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
@@ -41,40 +88,43 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                       ],
                     ),
-                    Spacer(),
+                    const Spacer(),
                     GestureDetector(
                       onTap: () {
-                        Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => NotificationPage()),
-                      );
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => NotificationPage()),
+                        );
                       },
-                      child: Icon(Icons.notifications),
+                      child: const Icon(Icons.notifications),
                     ),
                   ],
                 ),
               ),
-              SizedBox(height: 16.0),
-              CircleAvatar(
+              const SizedBox(height: 16.0),
+              const CircleAvatar(
                 radius: 50,
                 backgroundImage: AssetImage('assets/images/gojohh.jpg'),
               ),
-              SizedBox(height: 8.0),
+              const SizedBox(height: 8.0),
               Center(
                 child: Text(
-                  'Gojo Satoru',
-                  style: TextStyle(fontSize: 18),
+                  userData?['username'] ?? "Gojo Satoru",
+                  style: const TextStyle(fontSize: 18),
                 ),
               ),
-              SizedBox(height: 8.0),
+              const SizedBox(height: 8.0),
               GestureDetector(
                 onTap: () {
-                  Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => EditProfilePage()),
-                      );
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            EditProfilePage(userData: userData ?? {})),
+                  ).then((_) => takeUser());
                 },
-                child: Center(
+                child: const Center(
                   child: Text(
                     'View and Edit Profile',
                     style: TextStyle(
@@ -85,33 +135,44 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
               ),
-              SizedBox(height: 16.0),
+              const SizedBox(height: 16.0),
               GridView.count(
                 shrinkWrap: true,
                 crossAxisCount: 3,
-                physics: NeverScrollableScrollPhysics(),
+                physics: const NeverScrollableScrollPhysics(),
                 children: [
                   buildCard(
                     icon: Icons.bookmark,
                     title: 'BOOKMARKS',
                     onTap: () {
-                      // Navigate to bookmarks page
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const BookmarkPage()),
+                      );
                     },
                   ),
                   buildCard(
-                    icon: Icons.qr_code,
-                    title: 'SCAN QR',
+                    icon: Icons.subscriptions,
+                    title: 'SUBSCRIBE',
                     onTap: () {
-                      // Navigate to scan QR page
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => SubscribePage(
+                                  userId: userData!['id'],
+                                )),
+                      );
                     },
                   ),
                   buildCard(
                     icon: Icons.settings,
                     title: 'SETTINGS',
                     onTap: () {
-                      Navigator.pushReplacement(
+                      Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => SettingsPage()),
+                        MaterialPageRoute(
+                            builder: (context) => const SettingsPage()),
                       );
                     },
                   ),
@@ -119,16 +180,21 @@ class _ProfilePageState extends State<ProfilePage> {
                     icon: Icons.history,
                     title: 'HISTORY',
                     onTap: () {
-                      // Navigate to history page
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const HistoryPage()),
+                      );
                     },
                   ),
                   buildCard(
                     icon: Icons.payment,
                     title: 'PAYMENT',
                     onTap: () {
-                      Navigator.pushReplacement(
+                      Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => PaymentPage()),
+                        MaterialPageRoute(
+                            builder: (context) => const PaymentPage()),
                       );
                     },
                   ),
@@ -136,7 +202,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     icon: Icons.bookmark,
                     title: 'PROMOS',
                     onTap: () {
-                      Navigator.pushReplacement(
+                      Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => PromoPage()),
                       );
@@ -146,9 +212,10 @@ class _ProfilePageState extends State<ProfilePage> {
                     icon: Icons.group,
                     title: 'FRIENDS LIST',
                     onTap: () {
-                      Navigator.pushReplacement(
+                      Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => FriendListPage()),
+                        MaterialPageRoute(
+                            builder: (context) => FriendListPage()),
                       );
                     },
                   ),
@@ -156,9 +223,10 @@ class _ProfilePageState extends State<ProfilePage> {
                     icon: Icons.chat,
                     title: 'CONTACT US',
                     onTap: () {
-                      Navigator.pushReplacement(
+                      Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => ContactUsPage()),
+                        MaterialPageRoute(
+                            builder: (context) => const ContactUsPage()),
                       );
                     },
                   ),
@@ -166,31 +234,16 @@ class _ProfilePageState extends State<ProfilePage> {
                     icon: Icons.exit_to_app,
                     title: 'SIGN OUT',
                     onTap: () {
-                      Navigator.pushReplacement(
+                      Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => LoginView()),
+                        MaterialPageRoute(
+                            builder: (context) => const LoginPage()),
                       );
                     },
                   ),
                 ],
               ),
-              Spacer(),
-              BottomNavigationBar(
-                items: const <BottomNavigationBarItem>[
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.home),
-                    label: 'Home',
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.directions_car),
-                    label: 'Bookings',
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.person),
-                    label: 'Profile',
-                  ),
-                ],
-              ),
+              const Spacer(),
             ],
           ),
         ),
@@ -210,7 +263,7 @@ class _ProfilePageState extends State<ProfilePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(icon),
-            SizedBox(height: 4.0),
+            const SizedBox(height: 4.0),
             Text(
               title,
               textAlign: TextAlign.center,

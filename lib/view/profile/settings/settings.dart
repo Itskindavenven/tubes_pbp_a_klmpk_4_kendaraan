@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:pbp_widget_a_klmpk4/view/profile/profile.dart';
 import 'package:pbp_widget_a_klmpk4/view/profile/settings/language.dart';
 
 class SettingsPage extends StatefulWidget {
+  const SettingsPage({super.key});
+
   @override
   _SettingsPageState createState() => _SettingsPageState();
 }
@@ -18,7 +19,7 @@ class _SettingsPageState extends State<SettingsPage> {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -27,25 +28,22 @@ class _SettingsPageState extends State<SettingsPage> {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => ProfilePage()),
-                      );
+                      Navigator.pop(context);
                     },
-                    child: Icon(Icons.arrow_back),
+                    child: const Icon(Icons.arrow_back),
                   ),
-                  Text(
+                  const Text(
                     'Settings',
                     style: TextStyle(
                       fontSize: 24.0,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(width: 40.0),
+                  const SizedBox(width: 40.0),
                 ],
               ),
-              SizedBox(height: 20.0),
-              Text(
+              const SizedBox(height: 20.0),
+              const Text(
                 'Notifications',
                 style: TextStyle(
                   fontSize: 18.0,
@@ -89,15 +87,15 @@ class _SettingsPageState extends State<SettingsPage> {
                   // Tambahkan logika untuk mengubah tema di sini
                 },
               ),
-              SizedBox(height: 20.0),
+              const SizedBox(height: 20.0),
               GestureDetector(
                 onTap: () {
                   Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => LanguagePage()),
-                      );
+                    context,
+                    MaterialPageRoute(builder: (context) => LanguagePage()),
+                  );
                 },
-                child: Row(
+                child: const Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
@@ -117,8 +115,8 @@ class _SettingsPageState extends State<SettingsPage> {
                   ],
                 ),
               ),
-              SizedBox(height: 20.0),
-              Row(
+              const SizedBox(height: 20.0),
+              const Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(

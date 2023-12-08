@@ -1,64 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:pbp_widget_a_klmpk4/View/login/login.dart';
-import 'package:pbp_widget_a_klmpk4/theme.dart';
-import 'package:provider/provider.dart';
-import 'package:responsive_sizer/responsive_sizer.dart';
-import 'package:pbp_widget_a_klmpk4/view/onboarding.dart';
-import 'package:pbp_widget_a_klmpk4/pdf/pdf_view.dart';
-
-final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+import 'package:pbp_widget_a_klmpk4/view/login/login.dart';
 
 void main() {
-  runApp(
-    ChangeNotifierProvider(
-      create: (context) => ThemeProvider(),
-      child: const MainApp(),
-    ),
-  );
+  runApp(const MyApp());
 }
 
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveSizer(builder: (context, orientation, screenType) {
-      Device.orientation == Orientation.portrait
-          ? Container(
-              width: 100.w,
-              height: 20.5.h,
-            )
-          : Container(
-              width: 100.w,
-              height: 12.5.h,
-            );
-
-      Device.screenType == ScreenType.tablet
-          ? Container(
-              width: 100.w,
-              height: 20.5.h,
-            )
-          : Container(
-              width: 100.w,
-              height: 12.5.h,
-            );
-      return MaterialApp(
-        theme: ThemeData(fontFamily: 'Poppins'),
-        navigatorKey: navigatorKey,
-        debugShowCheckedModeBanner: false,
-        home: SplashScreenPage(),
-      );
-    });
+    return const MaterialApp(
+      home: SplashScreenPage(),
+      debugShowCheckedModeBanner: false,
+    );
   }
 }
 
-void resetNavigator() {
-  navigatorKey.currentState!.pushReplacement(MaterialPageRoute(
-    builder: (context) => const LoginView(),
-  ));
-}
-
 class SplashScreenPage extends StatefulWidget {
+  const SplashScreenPage({super.key});
+
   @override
   _SplashScreenPageState createState() => _SplashScreenPageState();
 }
@@ -68,32 +29,42 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
   void initState() {
     super.initState();
 
-    Future.delayed(Duration(seconds: 3), () {
+    // Add a delay before navigating to the login page
+    Future.delayed(const Duration(seconds: 3), () {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => Onbording()),
+        MaterialPageRoute(builder: (context) => const LoginPage()),
       );
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    // Store the context in a variable
+    // var savedContext = context;
+
     return Scaffold(
-      backgroundColor: Colors.deepPurple,
+      backgroundColor: const Color.fromRGBO(127, 90, 240, 1),
       body: Center(
-        child: Icon(
-          Icons.car_rental_outlined,
-          size: 200,
-          color: Colors.white,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              'assets/images/splash.jpg',
+              height: 100,
+              width: 100,
+            ),
+            const SizedBox(height: 20),
+            const Text(
+              'CAR RENT',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 28.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
         ),
-        // Text(
-        //   'CAR RENT',
-        //   style: TextStyle(
-        //     color: Colors.white,
-        //     fontSize: 28.0,
-        //     fontWeight: FontWeight.bold,
-        //   ),
-        // ),
       ),
     );
   }

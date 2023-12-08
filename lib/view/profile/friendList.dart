@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pbp_widget_a_klmpk4/view/profile/profile.dart';
 
 class FriendListPage extends StatefulWidget {
   @override
@@ -16,39 +15,36 @@ class _FriendListPageState extends State<FriendListPage> {
           children: [
             GestureDetector(
               onTap: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => ProfilePage()),
-                );
-              },
-              child: Icon(Icons.arrow_back),
+                      Navigator.pop(context);
+                    },
+              child: const Icon(Icons.arrow_back),
             ),
-            SizedBox(width: 8.0),
-            Text(
+            const SizedBox(width: 8.0),
+            const Text(
               'Friends',
               style: TextStyle(
                 fontSize: 20.0,
               ),
             ),
-            Spacer(),
+            const Spacer(),
             ElevatedButton(
               onPressed: () {
                 // Navigasi ke halaman Add Friend
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => AddFriendPage()));
               },
-              child: Text('ADD FRIENDS'),
+              child: const Text('ADD FRIENDS'),
             ),
           ],
         ),
       ),
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
+              const Row(
                 children: [
                   Icon(Icons.search),
                   SizedBox(width: 8.0),
@@ -61,8 +57,8 @@ class _FriendListPageState extends State<FriendListPage> {
                   ),
                 ],
               ),
-              SizedBox(height: 20.0),
-              buildFriendCard('assets/my_wife_image.jpg', 'My Wife',
+              const SizedBox(height: 20.0),
+              buildFriendCard('assets/images/gojohh.jpg', 'My Wife',
                   'heheehehe, sun is light'),
             ],
           ),
@@ -80,7 +76,7 @@ class _FriendListPageState extends State<FriendListPage> {
         ),
         title: Text(
           name,
-          style: TextStyle(
+          style: const TextStyle(
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -95,9 +91,9 @@ class AddFriendPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add Friend'),
+        title: const Text('Add Friend'),
       ),
-      body: Center(
+      body: const Center(
         child: Text('Add Friend Page'),
       ),
     );

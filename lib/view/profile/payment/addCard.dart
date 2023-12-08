@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:pbp_widget_a_klmpk4/view/profile/payment/payment.dart';
 
 class AddCardPage extends StatefulWidget {
+  const AddCardPage({super.key});
+  
   @override
   _AddCardPageState createState() => _AddCardPageState();
 }
@@ -26,7 +28,7 @@ class _AddCardPageState extends State<AddCardPage> {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -35,24 +37,21 @@ class _AddCardPageState extends State<AddCardPage> {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => PaymentPage()),
-                      );
+                      Navigator.pop(context);
                     },
-                    child: Icon(Icons.arrow_back),
+                    child: const Icon(Icons.arrow_back),
                   ),
-                  Text(
+                  const Text(
                     'Add Card',
                     style: TextStyle(
                       fontSize: 24.0,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(width: 40.0),
+                  const SizedBox(width: 40.0),
                 ],
               ),
-              SizedBox(height: 20.0),
+              const SizedBox(height: 20.0),
               Center(
                 child: Container(
                   width: 350,
@@ -60,30 +59,30 @@ class _AddCardPageState extends State<AddCardPage> {
                   color: Colors.grey,
                 ),
               ),
-              SizedBox(height: 30.0),
-              Text(
+              const SizedBox(height: 30.0),
+              const Text(
                   'Add credit card',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 18.0,
                   ),
                 ),
-              SizedBox(height: 20.0),
+              const SizedBox(height: 20.0),
               buildTextField('Credit card number', _cardNumberController),
               buildTextField('Expiry Month', _expiryMonthController),
               buildTextField('Expiry Year', _expiryYearController),
               buildTextField('CNN', _cnnController),
-              Spacer(),
+              const Spacer(),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.pushReplacement(
+                    Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => PaymentPage()),
                       );
                   },
-                  child: Text('Add'),
+                  child: const Text('Add'),
                 ),
               ),
             ],
@@ -95,12 +94,12 @@ class _AddCardPageState extends State<AddCardPage> {
 
   Widget buildTextField(String labelText, TextEditingController controller) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 8.0),
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: TextFormField(
         controller: controller,
         decoration: InputDecoration(
           labelText: labelText,
-          border: OutlineInputBorder(),
+          border: const OutlineInputBorder(),
         ),
       ),
     );

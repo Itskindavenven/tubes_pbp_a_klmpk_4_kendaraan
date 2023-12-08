@@ -32,6 +32,8 @@ class _BookCarPageState extends State<BookCarPage> {
   final String _endDateTime = '';
   String _pickupLocation = '';
 
+  TextEditingController pickupDateController = TextEditingController();
+  TextEditingController returnDateController = TextEditingController();
   TextEditingController locationController = TextEditingController();
   TextEditingController controllerDay = TextEditingController();
 
@@ -56,6 +58,8 @@ class _BookCarPageState extends State<BookCarPage> {
     super.initState();
     _getCurrentLocation();
     print(widget.id);
+    
+    locationController = TextEditingController(text: widget.location);
   }
 
   Future<Position> _getCurrentLocation() async {
@@ -99,6 +103,7 @@ class _BookCarPageState extends State<BookCarPage> {
     if (picked != pickupDate)
       setState(() {
         pickupDate = picked;
+        pickupDateController.text = "${pickupDate!.toLocal()}";
       });
   }
 
@@ -112,6 +117,7 @@ class _BookCarPageState extends State<BookCarPage> {
     if (picked != returnDate)
       setState(() {
         returnDate = picked;
+        returnDateController.text = "${returnDate!.toLocal()}";
       });
   }
 

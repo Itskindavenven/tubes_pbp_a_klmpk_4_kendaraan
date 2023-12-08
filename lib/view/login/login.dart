@@ -1,30 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+// import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:pbp_widget_a_klmpk4/entity/user.dart';
+import 'package:pbp_widget_a_klmpk4/view/login/forgot_password.dart';
 import 'package:pbp_widget_a_klmpk4/view/home/home.dart';
 import 'package:pbp_widget_a_klmpk4/view/login/register.dart';
-import 'package:pbp_widget_a_klmpk4/client/UserClient.dart';
-import 'package:pbp_widget_a_klmpk4/component/form_component.dart';
-import 'package:pbp_widget_a_klmpk4/view/login/forgot_password.dart';
-import 'package:pbp_widget_a_klmpk4/entity/user.dart';
-import 'package:pbp_widget_a_klmpk4/theme.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:provider/provider.dart';
-import 'package:responsive_sizer/responsive_sizer.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-// import 'package:pbp_widget_a_klmpk4/entity/user.dart';
+import 'package:pbp_widget_a_klmpk4/client/userClient.dart';
 
-class LoginView extends StatefulWidget {
+class LoginPage extends StatefulWidget {
   final Map? data;
 
-  const LoginView({Key? key, this.data}) : super(key: key);
+  const LoginPage({Key? key, this.data}) : super(key: key);
 
   @override
-  State<LoginView> createState() => _LoginViewState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
-class _LoginViewState extends State<LoginView> {
+class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
-
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
@@ -32,280 +27,154 @@ class _LoginViewState extends State<LoginView> {
 
   @override
   Widget build(BuildContext context) {
-    // Map? dataForm = widget.data;
-    // if (widget.data != null && widget.data!['registrationSuccess'] == true) {
-    //   // Show a SnackBar
-    //   WidgetsBinding.instance.addPostFrameCallback((_) {
-    //     ScaffoldMessenger.of(context).showSnackBar(
-    //       const SnackBar(
-    //         content: Text('Registration successful! Please log in.'),
-    //       ),
-    //     );
-    //   });
-    // }
+    // Check if registration was successful
+    if (widget.data != null && widget.data!['registrationSuccess'] == true) {
+      // Show a SnackBar
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        showSnackBar(context, "Register Berhasil!", Colors.green);
+      });
+    }
 
-    // Gunakan tema sesuai dengan kondisi _isDarkTheme
-    final themeProvider = Provider.of<ThemeProvider>(context);
-    final theme = themeProvider.isDarkTheme ? darkTheme : lightTheme;
-
-    return MaterialApp(
-      theme: theme, // Terapkan tema ke MaterialApp
-      home: Scaffold(
+    return Scaffold(
         body: SafeArea(
-          child: Stack(
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Center(
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Sign In',
-                        style: TextStyle(
-                          fontSize: 28.sp,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.deepPurpleAccent[400],
-                        ),
-                      ),
-                      SizedBox(
-                        height: 5.h,
-                      ),
-
-                      // Input field untuk username
-                      inputForm(
-                        // style: TextStyle(color: Colors.deepPurpleAccent),
-                        (p0) {
-                          if (p0 == null || p0.isEmpty) {
-                            return "Username Should Not Empty !";
-                          }
-                          return null;
-                        },
-                        controller: usernameController,
-                        hintTxt: "Username",
-                        helperTxt: "",
-                        iconData: Icons.person,
-                        suffixIcon: null,
-                      ),
-
-                      // Input field untuk password
-                      inputForm(
-                        (p0) {
-                          if (p0 == null || p0.isEmpty) {
-                            return "Password Should Not Empty !";
-                          }
-                          return null;
-                        },
-                        password: true,
-                        controller: passwordController,
-                        hintTxt: "Password",
-                        helperTxt: "",
-                        iconData: Icons.lock,
-                        obscureText: !_isPasswordVisible,
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            _isPasswordVisible
-                                ? FontAwesomeIcons.eye
-                                : FontAwesomeIcons.eyeSlash,
-                            color: Colors.deepPurpleAccent[400],
-                          ),
-                          onPressed: _togglePasswordVisibility,
-                        ),
-                      ),
-
-                      // const SizedBox(height: 2),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => const ForgotPasswordView(),
-                                ),
-                              );
-                            },
-                            child: const Text('Lupa password?'),
-                            style: TextButton.styleFrom(
-                                primary: Colors.deepPurpleAccent[400]),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => LoginView(),
-                                ),
-                              );
-                            },
-                            child: const Text(
-                                '                                                               '),
-                            style: TextButton.styleFrom(
-                                primary: Colors.transparent),
-                          )
-                        ],
-                      ),
-
-                      SizedBox(height: 3.h),
-
-                      // Tombol Login dan Daftar
-
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          primary: Colors.deepPurpleAccent[400],
-                          minimumSize: Size(350, 55),
-                        ),
-                        onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            UserClient.login(usernameController.text,
-                                    passwordController.text)
-                                .then((value) async {
-                              if (value != null) {
-                                showDialog(
-                                    context: context,
-                                    builder: (_) => AlertDialog(
-                                          title: const Text('Login Berhasil'),
-                                          content: const Text(
-                                              'Anda telah berhasil login.'),
-                                          actions: <Widget>[
-                                            TextButton(
-                                              onPressed: () =>
-                                                  Navigator.pop(context, 'OK'),
-                                              child: const Text('OK'),
-                                            ),
-                                          ],
-                                        ));
-                                await Future.delayed(
-                                    const Duration(seconds: 3));
-                                int? userId = value.id;
-                                if (userId != null) {
-                                  addPrefsId(userId);
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_) => const Homepage(),
-                                    ),
-                                  );
-                                } else {
-                                  showDialog(
-                                    context: context,
-                                    builder: (_) => AlertDialog(
-                                      title: const Text('Login Gagal'),
-                                      content: const Text(
-                                          'Terjadi kesalahan saat login. Silakan coba lagi.'),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                          child: const Text('OK'),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                }
-                              } else {
-                                showDialog(
-                                    context: context,
-                                    builder: (_) => AlertDialog(
-                                          title: const Text(
-                                              'Username atau Password Salah!'),
-                                          actions: <Widget>[
-                                            TextButton(
-                                              onPressed: () {
-                                                if (mounted) {
-                                                  Navigator.pop(context, 'OK');
-                                                }
-                                              },
-                                              child: const Text('OK'),
-                                            ),
-                                          ],
-                                        ));
-                              }
-                            }).catchError((error) {
-                              showDialog(
-                                  context: context,
-                                  builder: (_) => AlertDialog(
-                                        title: const Text(
-                                            'Username atau Password Salah!'),
-                                        actions: <Widget>[
-                                          TextButton(
-                                            onPressed: () {
-                                              if (mounted) {
-                                                Navigator.pop(context, 'OK');
-                                              }
-                                            },
-                                            child: const Text('OK'),
-                                          ),
-                                        ],
-                                      ));
-                            });
-                          }
-                        },
-                        child: const Text('Login'),
-                      ),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      const Text('Don\'t have an account?'),
-                      TextButton(
-                        onPressed: () {
-                          Map<String, dynamic> formData = {};
-                          formData['username'] = usernameController.text;
-                          formData['password'] = passwordController.text;
-                          pushRegister(context);
-                        },
-                        child: const Text('Sign Up'),
-                        style: TextButton.styleFrom(
-                            primary: Colors.deepPurpleAccent[400]),
-                      ),
-                    ],
-                  ),
+              const Text(
+                'Login',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 48,
+                  fontWeight: FontWeight.bold,
+                  color: Color.fromRGBO(127, 90, 240, 1),
                 ),
               ),
-              Positioned(
-                bottom: 1.0.h,
-                left: 8.0.w,
-                child: InkWell(
-                  onTap: () {
-                    _toggleTheme(context);
-                  },
-                  child: Container(
-                    width: 10.0.w,
-                    height: 10.0.h,
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.deepPurpleAccent,
+              const SizedBox(
+                height: 40,
+              ),
+              TextFormField(
+                controller: usernameController,
+                decoration: const InputDecoration(
+                    labelText: 'Username', border: OutlineInputBorder()),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Username Tidak Boleh Kosong';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 20),
+              TextFormField(
+                controller: passwordController,
+                decoration: InputDecoration(
+                  labelText: 'Password',
+                  border: const OutlineInputBorder(),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _isPasswordVisible
+                          ? FontAwesomeIcons.eye
+                          : FontAwesomeIcons.eyeSlash,
                     ),
-                    child: const Center(
-                      child: Icon(
-                        FontAwesomeIcons.moon,
-                        color: Colors.white,
-                      ),
+                    onPressed: _togglePasswordVisibility,
+                  ),
+                ),
+                obscureText: !_isPasswordVisible,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "password kosong";
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 10),
+              const SizedBox(height: 15.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const ForgotPass()),
+                      );
+                    },
+                    child: const Text(
+                      'Forgot Password',
+                      style: TextStyle(color: Color.fromRGBO(127, 90, 240, 1)),
                     ),
                   ),
+                ],
+              ),
+              const SizedBox(height: 50),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color.fromRGBO(127, 90, 240, 1),
+                ),
+                onPressed: () async {
+                  if (_formKey.currentState!.validate()) {
+                    try {
+                      User? loggedUser = await UserClient.login(
+                          usernameController.text, passwordController.text);
+                      if (loggedUser != null) {
+                        print(loggedUser.id);
+                        // ignore: use_build_context_synchronously
+                        addPrefsId(loggedUser.id);
+                        showSnackBar(context, "Login Berhasil!", Colors.green);
+                        await Future.delayed(const Duration(seconds: 2));
+                        // ignore: use_build_context_synchronously
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const Homepage()),
+                        );
+                      } else {
+                        // ignore: use_build_context_synchronously
+                        showSnackBar(context, "Username atau Password Salah!",
+                            Colors.red);
+                      }
+                    } catch (e) {
+                      showSnackBar(
+                          context, "Username atau Password Salah!", Colors.red);
+                    }
+                  }
+                },
+                child: const Text(
+                  'Login',
+                ),
+              ),
+              const SizedBox(height: 10),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const RegisterPage()),
+                  );
+                },
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('Don\'t have an account? '),
+                    Text(
+                      'Sign Up',
+                      style: TextStyle(
+                        color: Color.fromRGBO(127, 90, 240, 1),
+                      ),
+                    ),
+                  ],
                 ),
               )
             ],
           ),
         ),
       ),
-    );
-  }
-
-  void pushRegister(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => const RegisterView(),
-      ),
-    );
-  }
-
-  void _toggleTheme(BuildContext context) {
-    final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
-    themeProvider.toggleTheme(); // Toggle tema gelap/terang
+    ));
   }
 
   void _togglePasswordVisibility() {
@@ -315,8 +184,29 @@ class _LoginViewState extends State<LoginView> {
     });
   }
 
-  void addPrefsId(int id) async {
+  addPrefsId(int? id) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setInt('userId', id);
+    prefs.setInt('userId', id ?? 0);
+  }
+
+  // void showToast(String msg, Color color) {
+  //   Fluttertoast.showToast(
+  //       msg: msg,
+  //       toastLength: Toast.LENGTH_LONG,
+  //       gravity: ToastGravity.TOP,
+  //       backgroundColor: color,
+  //       textColor: Colors.white,
+  //       fontSize: 18,
+  //       timeInSecForIosWeb: 2);
+  // }
+
+  void showSnackBar(BuildContext context, String msg, Color bg) {
+    final scaffold = ScaffoldMessenger.of(context);
+    scaffold.showSnackBar(SnackBar(
+      content: Text(msg),
+      backgroundColor: bg,
+      action: SnackBarAction(
+          label: 'hide', onPressed: scaffold.hideCurrentSnackBar),
+    ));
   }
 }

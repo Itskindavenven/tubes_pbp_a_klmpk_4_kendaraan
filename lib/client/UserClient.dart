@@ -1,14 +1,17 @@
+// import 'dart:ffi';
+
 import 'package:pbp_widget_a_klmpk4/entity/user.dart';
 
 import 'dart:convert';
 import 'package:http/http.dart';
+// import 'package:test/expect.dart';
 
 class UserClient {
-  static final String url = '10.0.2.2:8000';
-  static final String endpoint = '/api';
-
-  // static final String url = '192.168.100.48';
-  // static final String endpoint = '/api_pbp/public/api';
+  // url HP, di command aja jgn di hapus
+  // static final String url = '192.168.1.7';
+  // static final String endpoint = '/api_pbp_tubes_sewa_mobil/public/api';
+  static const String url = '10.0.2.2:8000';
+  static const String endpoint = '/api';
 
   static Future<List<User>> fetchAll() async {
     try {
@@ -36,11 +39,20 @@ class UserClient {
     }
   }
 
-  static Future<Response> register(User user) async {
+  static Future<Response?> register(User user) async {
+    print(user.toRawJson());
+    print("$url$endpoint/register");
     try {
       var response = await post(Uri.http(url, '$endpoint/register'),
           headers: {"Content-Type": "application/json"},
-          body: user.toRawJson());
+          body: jsonEncode({
+            'username': user.username,
+            'email': user.email,
+            'password': user.password,
+            'noTelp': user.noTelp,
+            'tglLahir': user.tglLahir,
+            'image': user.image
+          }));
       print(response.body);
       if (response.statusCode != 200) throw Exception(response.reasonPhrase);
       return response;
@@ -49,7 +61,7 @@ class UserClient {
     }
   }
 
-  static Future<User> login(String username, String password) async {
+  static Future<User?> login(String username, String password) async {
     try {
       var response = await post(Uri.http(url, '$endpoint/login'),
           body: {'username': username, 'password': password});
@@ -58,7 +70,7 @@ class UserClient {
       print(User.fromJson(json.decode(response.body)['data']));
       return User.fromJson(json.decode(response.body)['data']);
     } catch (e) {
-      return Future.error(e.toString());
+      return null;
     }
   }
 

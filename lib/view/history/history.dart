@@ -20,29 +20,35 @@ class _HistoryPageState extends State<HistoryPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Row(
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Center(
-                    child: Text(
-                      'HISTORY PAYMENT',
-                      style: TextStyle(
-                        fontSize: 24.0,
-                        fontWeight: FontWeight.bold,
-                      ),
+                  const Text(
+                    'All Review',
+                    style: TextStyle(
+                      fontSize: 24.0,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(width: 40.0),
+                  const SizedBox(width: 40.0),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: const Color.fromRGBO(127, 90, 240, 1),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                    ),
+                    onPressed: () async {},
+                    child: const Text('Review'),
+                  ),
                 ],
               ),
               const SizedBox(height: 20.0),
-              buildPaymentCard(
-                  'Porsche GT3RS', '20/11/2023', 'Rp 540.000,00', 'dn129he9'),
+              buildPaymentCard('Porsche GT3RS', 'keren', 'ryann'),
               const SizedBox(height: 16.0),
-              buildPaymentCard('Pajero Sport 2019', '20/11/2023',
-                  'Rp 540.000,00', 'wjdia2992'),
+              buildPaymentCard('Pajero Sport 2019', 'jelek', 'fadly'),
               const SizedBox(height: 16.0),
-              buildPaymentCard('Pajero Sport 2019', '20/11/2023',
-                  'Rp 540.000,00', 'wjdia2992'),
+              buildPaymentCard('Pajero Sport 2019', 'mayan', 'kodok'),
               const Spacer(),
             ],
           ),
@@ -51,7 +57,7 @@ class _HistoryPageState extends State<HistoryPage> {
     );
   }
 
-  Widget buildPaymentCard(String title, String date, String price, String id) {
+  Widget buildPaymentCard(String title, String comment, String username) {
     return Card(
       elevation: 3,
       margin: const EdgeInsets.symmetric(vertical: 8.0),
@@ -60,118 +66,23 @@ class _HistoryPageState extends State<HistoryPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: Size(30, 25),
-                    backgroundColor: const Color.fromRGBO(127, 90, 240, 1),
-                  ),
-                  onPressed: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => ReviewPage()),
-                    );
-                  },
-                  child: const Text(
-                    'Done',
-                  ),
-                ),
-              ],
+            Text(
+              title,
+              style: const TextStyle(
+                fontSize: 20.0,
+                fontWeight: FontWeight.bold,
+              ),
             ),
+            const SizedBox(height: 8.0),
             const SizedBox(height: 8.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  date,
-                  style: TextStyle(color: Colors.grey),
-                ),
-                const SizedBox(height: 8.0),
-                Text('ID: $id'),
-              ],
-            ),
-            const SizedBox(height: 8.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  price,
+                  '$username = $comment',
                   style: TextStyle(fontSize: 18),
                 ),
                 const SizedBox(height: 8.0),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        minimumSize: Size(50, 20),
-                        backgroundColor: Colors.white,
-                        side:
-                            BorderSide(color: Color.fromRGBO(127, 90, 240, 1)),
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          isReviewed = !isReviewed;
-                        });
-                      },
-                      child: isReviewed
-                          ? Row(
-                              children: [
-                                const Icon(Icons.star,
-                                    color: Color.fromRGBO(127, 90, 240, 1)),
-                                const SizedBox(width: 3),
-                                Container(
-                                    width: 25,
-                                    height: 25,
-                                    decoration: BoxDecoration(
-                                      color: Color.fromRGBO(0, 33, 206, 1),
-                                      borderRadius: BorderRadius.circular(5.0),
-                                    ),
-                                    child: Center(
-                                      child: IconButton(
-                                        iconSize: 12,
-                                        onPressed: () {
-                                          // Tambahkan logika saat tombol edit ditekan
-                                        },
-                                        icon: Icon(Icons.edit),
-                                      ),
-                                    )),
-                                const SizedBox(width: 3),
-                                Container(
-                                    width: 25,
-                                    height: 25,
-                                    decoration: BoxDecoration(
-                                      color: Color.fromRGBO(216, 0, 39, 1),
-                                      borderRadius: BorderRadius.circular(5.0),
-                                    ),
-                                    child: Center(
-                                      child: IconButton(
-                                        iconSize: 12,
-                                        onPressed: () {
-                                          // Tambahkan logika saat tombol hapus ditekan
-                                        },
-                                        icon: Icon(Icons.delete),
-                                      ),
-                                    )),
-                              ],
-                            )
-                          : Text(
-                              'Review',
-                              style: TextStyle(
-                                  color: Color.fromRGBO(127, 90, 240, 1)),
-                            ),
-                    ),
-                  ],
-                ),
               ],
             ),
           ],
