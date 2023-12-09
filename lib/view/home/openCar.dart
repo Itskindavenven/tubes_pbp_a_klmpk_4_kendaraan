@@ -425,9 +425,8 @@ class _OpenCarPageState extends State<OpenCarPage> {
         Container(
           decoration: const BoxDecoration(
             color: Color.fromRGBO(127, 90, 240, 1),
-            borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)),
+            borderRadius: BorderRadius.vertical(top: Radius.circular(5.0)),
           ),
-          padding: const EdgeInsets.all(25.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -436,69 +435,69 @@ class _OpenCarPageState extends State<OpenCarPage> {
                 children: [
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      FutureBuilder<Cart>(
-                        future: CartClient.find(widget.id),
-                        builder: (BuildContext context,
-                            AsyncSnapshot<Cart> snapshot) {
-                          if (snapshot.hasData) {
-                            return Text(
-                              '${snapshot.data!.carName}',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20,
-                                color: Colors.white,
-                              ),
-                            );
-                          } else if (snapshot.hasError) {
-                            return Text('${snapshot.error}',
-                                style: const TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.bold));
-                          }
-                          // By default, show a loading spinner.
-                          return CircularProgressIndicator();
-                        },
-                      ),
-                      FutureBuilder<Car>(
-                        future: CartClient.find(widget.id).then(
-                            (cart) => CartClient.getDataCar(cart.id_car!)),
-                        builder: (BuildContext context,
-                            AsyncSnapshot<Car> snapshot) {
-                          if (snapshot.hasData) {
-                            return Text(
-                              '${snapshot.data!.kursi} Passenger',
-                              style: const TextStyle(
-                                fontSize: 16,
-                                color: Colors.white,
-                              ),
-                            );
-                          } else if (snapshot.hasError) {
-                            return Text('${snapshot.error}',
-                                style: const TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.bold));
-                          }
-                          // By default, show a loading spinner.
-                          return CircularProgressIndicator();
-                        },
-                      ),
-                    ],
+                    // children: [
+                    //   FutureBuilder<Cart>(
+                    //     future: CartClient.find(widget.id),
+                    //     builder: (BuildContext context,
+                    //         AsyncSnapshot<Cart> snapshot) {
+                    //       if (snapshot.hasData) {
+                    //         return Text(
+                    //           '${snapshot.data!.carName}',
+                    //           style: const TextStyle(
+                    //             fontWeight: FontWeight.bold,
+                    //             fontSize: 20,
+                    //             color: Colors.white,
+                    //           ),
+                    //         );
+                    //       } else if (snapshot.hasError) {
+                    //         return Text('${snapshot.error}',
+                    //             style: const TextStyle(
+                    //                 fontSize: 16, fontWeight: FontWeight.bold));
+                    //       }
+                    //       // By default, show a loading spinner.
+                    //       return CircularProgressIndicator();
+                    //     },
+                    //   ),
+                    //   FutureBuilder<Car>(
+                    //     future: CartClient.find(widget.id).then(
+                    //         (cart) => CartClient.getDataCar(cart.id_car!)),
+                    //     builder: (BuildContext context,
+                    //         AsyncSnapshot<Car> snapshot) {
+                    //       if (snapshot.hasData) {
+                    //         return Text(
+                    //           '${snapshot.data!.kursi} Passenger',
+                    //           style: const TextStyle(
+                    //             fontSize: 16,
+                    //             color: Colors.white,
+                    //           ),
+                    //         );
+                    //       } else if (snapshot.hasError) {
+                    //         return Text('${snapshot.error}',
+                    //             style: const TextStyle(
+                    //                 fontSize: 16, fontWeight: FontWeight.bold));
+                    //       }
+                    //       // By default, show a loading spinner.
+                    //       return CircularProgressIndicator();
+                    //     },
+                    //   ),
+                    // ],
                   ),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.star,
-                        color: Colors.yellow,
-                      ),
-                      SizedBox(width: 5),
-                      Text(
-                        '4.8',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
+                  // Row(
+                  //   children: [
+                  //     Icon(
+                  //       Icons.star,
+                  //       color: Colors.yellow,
+                  //     ),
+                  //     SizedBox(width: 5),
+                  //     Text(
+                  //       '4.8',
+                  //       style: TextStyle(
+                  //         fontSize: 16,
+                  //         color: Colors.white,
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
                 ],
               ),
             ],
@@ -548,7 +547,7 @@ class _OpenCarPageState extends State<OpenCarPage> {
               buildSpecCard(
                 Icons.location_on,
                 '',
-                cart[id_cart].location,
+                firstFiveWords(cart[id_cart].location),
               ),
               const SizedBox(height: 10),
               const Text(
@@ -637,5 +636,13 @@ class _OpenCarPageState extends State<OpenCarPage> {
         ),
       ],
     );
+  }
+
+  String firstFiveWords(String text) {
+    List<String> words = text.split(' ');
+    if (words.length > 5) {
+      words = words.take(5).toList();
+    }
+    return words.join(' ');
   }
 }

@@ -37,6 +37,8 @@ class _LoginPageState extends State<LoginPage> {
 
     return Scaffold(
         body: SafeArea(
+            child: Center(
+                child: SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Form(
@@ -125,7 +127,7 @@ class _LoginPageState extends State<LoginPage> {
                         print(loggedUser.id);
                         // ignore: use_build_context_synchronously
                         addPrefsId(loggedUser.id);
-                        showSnackBar(context, "Login Berhasil!", Colors.green);
+                        showToast("Login Berhasil!", Colors.green);
                         await Future.delayed(const Duration(seconds: 2));
                         // ignore: use_build_context_synchronously
                         Navigator.push(
@@ -172,7 +174,7 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ),
       ),
-    ));
+    ))));
   }
 
   void _togglePasswordVisibility() {

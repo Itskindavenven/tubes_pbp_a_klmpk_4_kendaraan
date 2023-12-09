@@ -336,7 +336,14 @@ class _HomeViewState extends State<HomeView> {
                                 print('hapus id cart ke');
                                 print(cart[index].id);
                                 await CartClient.destroy(cart[index].id);
-                                refresh();
+                                setState(() {
+                                  refresh();
+                                });
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => Homepage(),
+                                    ));
                               },
                             ),
                           ],
@@ -501,27 +508,6 @@ class _HomeViewState extends State<HomeView> {
                                                           .shutter_speed_rounded,
                                                       size: 18),
                                                   SizedBox(width: 4),
-                                                  FutureBuilder<Car>(
-                                                    future:
-                                                        CartClient.getDataCar(
-                                                            cart[index]
-                                                                .id_car!),
-                                                    builder:
-                                                        (BuildContext context,
-                                                            AsyncSnapshot<Car>
-                                                                snapshot) {
-                                                      if (snapshot.hasData) {
-                                                        return Text(
-                                                            '${snapshot.data!.transmisi}');
-                                                      } else if (snapshot
-                                                          .hasError) {
-                                                        return Text(
-                                                            '${snapshot.error}');
-                                                      }
-                                                      // By default, show a loading spinner.
-                                                      return CircularProgressIndicator();
-                                                    },
-                                                  ),
                                                 ],
                                               ),
                                               SizedBox(height: 8),
@@ -540,14 +526,14 @@ class _HomeViewState extends State<HomeView> {
                                                       ),
                                                       SizedBox(width: 4),
                                                       Text(
-                                                          'Pick up Date : ${cart[index].pickup_date}'),
+                                                          '${cart[index].pickup_date}'),
                                                     ],
                                                   ),
                                                   Row(
                                                     children: [
                                                       Text(
                                                           '${cart[index].location.split(" ")[1]}'),
-                                                      SizedBox(width: 4),
+                                                      SizedBox(width: 2),
                                                       Icon(
                                                         Icons.location_on,
                                                         size: 18,
@@ -577,7 +563,7 @@ class _HomeViewState extends State<HomeView> {
                                                       ),
                                                       SizedBox(width: 4),
                                                       Text(
-                                                          'Return Date : ${cart[index].return_date}'),
+                                                          '${cart[index].return_date}'),
                                                     ],
                                                   ),
                                                   SizedBox(width: 70),

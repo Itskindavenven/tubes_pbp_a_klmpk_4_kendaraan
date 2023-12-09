@@ -88,16 +88,36 @@ class _MyReviewPageState extends State<MyReviewPage> {
             children: [
               Row(
                 children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.arrow_back),
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Homepage(),
+                              ));
+                        },
+                      ),
+                      const Text(
+                        '',
+                        style: TextStyle(
+                            fontSize: 18.0, fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
                   const Center(
                     child: Text(
                       'My Car REVIEW',
                       style: TextStyle(
-                        fontSize: 24.0,
+                        fontSize: 16.0,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
-                  const SizedBox(width: 100.0),
+                  const SizedBox(width: 90.0),
                   TextButton(
                     onPressed: () {
                       Navigator.push(

@@ -45,7 +45,7 @@ class _ReviewPageState extends State<ReviewPage> {
       var response = await ratingClient.create(newRating);
 
       if (response.statusCode == 201) {
-        await CartClient.updateIsReviewed(widget.selectedCart.id ?? 0);
+        // await ratingClient.update();
       } else {
         print('Failed to save review: ${response.reasonPhrase}');
       }

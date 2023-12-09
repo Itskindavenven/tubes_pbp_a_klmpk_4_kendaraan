@@ -44,14 +44,15 @@ class _EditReviewPageState extends State<EditReviewPage> {
             TextField(
               controller: nilaiController,
               keyboardType: TextInputType.number,
-              decoration: InputDecoration(labelText: 'Rating'),
+              decoration: InputDecoration(labelText: 'Nilai'),
             ),
             const SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: () {
                 updateReview(widget.initialReview.id!);
+                showSnackBar(context, "Berhasil simpan", Colors.green);
               },
-              child: Text('Save Changes'),
+              child: const Text('Save Changes'),
             ),
           ],
         ),
@@ -67,11 +68,21 @@ class _EditReviewPageState extends State<EditReviewPage> {
         id_user: widget.initialReview.id_user,
         id_car: widget.initialReview.id_car,
         komentar: komentarController.text,
-        nilai: rating,
+        nilai: int.parse(nilaiController.text),
       );
       reviewClient.update(updateReview);
     } catch (e) {
       print('Error parsing rating: $e');
     }
+  }
+
+  void showSnackBar(BuildContext context, String msg, Color bg) {
+    final scaffold = ScaffoldMessenger.of(context);
+    scaffold.showSnackBar(SnackBar(
+      content: Text(msg),
+      backgroundColor: bg,
+      action: SnackBarAction(
+          label: 'hide', onPressed: scaffold.hideCurrentSnackBar),
+    ));
   }
 }

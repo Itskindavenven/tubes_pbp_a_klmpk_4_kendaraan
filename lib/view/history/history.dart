@@ -69,21 +69,21 @@ class _HistoryPageState extends State<HistoryPage> {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 100.0),
+                  const SizedBox(width: 70.0),
                   TextButton(
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const MyReviewPage()),
+                        MaterialPageRoute(
+                            builder: (context) => const MyReviewPage()),
                       );
                     },
                     child: const Text(
                       'My Review',
                       style: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
-                        color: Color.fromRGBO(127, 90, 240, 1)
-                      ),
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold,
+                          color: Color.fromRGBO(127, 90, 240, 1)),
                     ),
                   ),
                 ],

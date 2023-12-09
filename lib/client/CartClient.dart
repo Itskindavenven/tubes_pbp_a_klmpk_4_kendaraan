@@ -5,11 +5,11 @@ import 'dart:convert';
 import 'package:http/http.dart';
 
 class CartClient {
-  // static final String url = '10.0.2.2:8000';
-  // static final String endpoint = '/api';
+  static final String url = '20.243.16.126:8000';
+  static final String endpoint = '/api';
 
-  static final String url = '10.5.2.41';
-  static final String endpoint = 'api_pbp_tubes_sewa_mobil/public/api';
+  // static final String url = '192.168.100.14';
+  // static final String endpoint = 'api_pbp_tubes_sewa_mobil/public/api';
 
   static Future<int> getUserId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

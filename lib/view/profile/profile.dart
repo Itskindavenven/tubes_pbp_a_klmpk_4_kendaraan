@@ -29,7 +29,7 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   Map<String, dynamic>? userData;
   Uint8List? userImage;
-
+  bool loading = false;
 
   Future<void> takeUser() async {
     int userId;
@@ -44,12 +44,16 @@ class _ProfilePageState extends State<ProfilePage> {
         if (base64Image != "default") {
           userImage = base64Decode(base64Image);
         }
+        loading = false;
       });
     });
   }
 
   @override
   void initState() {
+    setState(() {
+      loading = true;
+    });
     takeUser();
     print("User: $userData");
     super.initState();
@@ -127,209 +131,214 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        body: SafeArea(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
+        body: loading
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            : SafeArea(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const Icon(Icons.location_on),
-                    const SizedBox(width: 8.0),
-                    const Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Your Location',
-                          style: TextStyle(fontSize: 12),
-                        ),
-                        Text(
-                          'Yogyakarta',
-                          style: TextStyle(fontSize: 16),
-                        ),
-                      ],
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.location_on),
+                          const SizedBox(width: 8.0),
+                          const Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Your Location',
+                                style: TextStyle(fontSize: 12),
+                              ),
+                              Text(
+                                'Yogyakarta',
+                                style: TextStyle(fontSize: 16),
+                              ),
+                            ],
+                          ),
+                          const Spacer(),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => NotificationPage()),
+                              );
+                            },
+                            child: const Icon(Icons.notifications),
+                          ),
+                        ],
+                      ),
                     ),
-                    const Spacer(),
+                    const SizedBox(height: 16.0),
+                    // GestureDetector(
+                    //   onTap: () async {
+                    //     await pickImage();
+                    //     editUser(userData!['id'] ?? "-1");
+                    //   },
+                    //   child: CircleAvatar(
+                    //     radius: 50,
+                    //     backgroundImage: userData!['image'] == "Default"
+                    //         ? AssetImage('assets/images/gojohh.jpg')
+                    //         : Image.memory(base64Decode(userData!['image'])).image,
+                    //   ),
+                    // ),
+
+                    GestureDetector(
+                      onTap: () async {
+                        await pickImage();
+                        editUser(userData!['id'] ?? -1);
+                      },
+                      child: CircleAvatar(
+                        radius: 50,
+                        backgroundImage: userData!['image'] == "default"
+                            ? AssetImage('assets/images/gojohh.jpg')
+                            : Image.memory(userImage!).image,
+                      ),
+                    ),
+                    const SizedBox(height: 8.0),
+                    Center(
+                      child: Text(
+                        userData?['username'] ?? "Gojo Satoru",
+                        style: const TextStyle(fontSize: 18),
+                      ),
+                    ),
+                    const SizedBox(height: 8.0),
                     GestureDetector(
                       onTap: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => NotificationPage()),
-                        );
+                              builder: (context) =>
+                                  EditProfilePage(userData: userData ?? {})),
+                        ).then((_) => takeUser());
                       },
-                      child: const Icon(Icons.notifications),
+                      child: const Center(
+                        child: Text(
+                          'View and Edit Profile',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.blue,
+                            decoration: TextDecoration.underline,
+                          ),
+                        ),
+                      ),
                     ),
+                    const SizedBox(height: 16.0),
+                    GridView.count(
+                      shrinkWrap: true,
+                      crossAxisCount: 3,
+                      physics: const NeverScrollableScrollPhysics(),
+                      children: [
+                        buildCard(
+                          icon: Icons.bookmark,
+                          title: 'BOOKMARKS',
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const BookmarkPage()),
+                            );
+                          },
+                        ),
+                        buildCard(
+                          icon: Icons.subscriptions,
+                          title: 'SUBSCRIBE',
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => SubscribePage(
+                                        userId: userData!['id'],
+                                      )),
+                            );
+                          },
+                        ),
+                        buildCard(
+                          icon: Icons.settings,
+                          title: 'SETTINGS',
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const SettingsPage()),
+                            );
+                          },
+                        ),
+                        buildCard(
+                          icon: Icons.history,
+                          title: 'HISTORY',
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const HistoryPage()),
+                            );
+                          },
+                        ),
+                        buildCard(
+                          icon: Icons.payment,
+                          title: 'PAYMENT',
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const PaymentPage()),
+                            );
+                          },
+                        ),
+                        buildCard(
+                          icon: Icons.bookmark,
+                          title: 'PROMOS',
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => PromoPage()),
+                            );
+                          },
+                        ),
+                        buildCard(
+                          icon: Icons.group,
+                          title: 'FRIENDS LIST',
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => FriendListPage()),
+                            );
+                          },
+                        ),
+                        buildCard(
+                          icon: Icons.chat,
+                          title: 'CONTACT US',
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const ContactUsPage()),
+                            );
+                          },
+                        ),
+                        buildCard(
+                          icon: Icons.exit_to_app,
+                          title: 'SIGN OUT',
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const LoginPage()),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                    const Spacer(),
                   ],
                 ),
               ),
-              const SizedBox(height: 16.0),
-              // GestureDetector(
-              //   onTap: () async {
-              //     await pickImage();
-              //     editUser(userData!['id'] ?? "-1");
-              //   },
-              //   child: CircleAvatar(
-              //     radius: 50,
-              //     backgroundImage: userData!['image'] == "Default"
-              //         ? AssetImage('assets/images/gojohh.jpg')
-              //         : Image.memory(base64Decode(userData!['image'])).image,
-              //   ),
-              // ),
-
-              GestureDetector(
-                onTap: () async {
-                  await pickImage();
-                  editUser(userData!['id'] ?? -1);
-                },
-                child: CircleAvatar(
-                  radius: 50,
-                  backgroundImage: userData!['image'] == "default"
-                      ? AssetImage('assets/images/gojohh.jpg')
-                      : Image.memory(userImage!).image,
-                ),
-              ),
-              const SizedBox(height: 8.0),
-              Center(
-                child: Text(
-                  userData?['username'] ?? "Gojo Satoru",
-                  style: const TextStyle(fontSize: 18),
-                ),
-              ),
-              const SizedBox(height: 8.0),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            EditProfilePage(userData: userData ?? {})),
-                  ).then((_) => takeUser());
-                },
-                child: const Center(
-                  child: Text(
-                    'View and Edit Profile',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.blue,
-                      decoration: TextDecoration.underline,
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16.0),
-              GridView.count(
-                shrinkWrap: true,
-                crossAxisCount: 3,
-                physics: const NeverScrollableScrollPhysics(),
-                children: [
-                  buildCard(
-                    icon: Icons.bookmark,
-                    title: 'BOOKMARKS',
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const BookmarkPage()),
-                      );
-                    },
-                  ),
-                  buildCard(
-                    icon: Icons.subscriptions,
-                    title: 'SUBSCRIBE',
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => SubscribePage(
-                                  userId: userData!['id'],
-                                )),
-                      );
-                    },
-                  ),
-                  buildCard(
-                    icon: Icons.settings,
-                    title: 'SETTINGS',
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const SettingsPage()),
-                      );
-                    },
-                  ),
-                  buildCard(
-                    icon: Icons.history,
-                    title: 'HISTORY',
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const HistoryPage()),
-                      );
-                    },
-                  ),
-                  buildCard(
-                    icon: Icons.payment,
-                    title: 'PAYMENT',
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const PaymentPage()),
-                      );
-                    },
-                  ),
-                  buildCard(
-                    icon: Icons.bookmark,
-                    title: 'PROMOS',
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => PromoPage()),
-                      );
-                    },
-                  ),
-                  buildCard(
-                    icon: Icons.group,
-                    title: 'FRIENDS LIST',
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => FriendListPage()),
-                      );
-                    },
-                  ),
-                  buildCard(
-                    icon: Icons.chat,
-                    title: 'CONTACT US',
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const ContactUsPage()),
-                      );
-                    },
-                  ),
-                  buildCard(
-                    icon: Icons.exit_to_app,
-                    title: 'SIGN OUT',
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const LoginPage()),
-                      );
-                    },
-                  ),
-                ],
-              ),
-              const Spacer(),
-            ],
-          ),
-        ),
       ),
     );
   }
@@ -355,5 +364,15 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
       ),
     );
+  }
+
+  void showSnackBar(BuildContext context, String msg, Color bg) {
+    final scaffold = ScaffoldMessenger.of(context);
+    scaffold.showSnackBar(SnackBar(
+      content: Text(msg),
+      backgroundColor: bg,
+      action: SnackBarAction(
+          label: 'hide', onPressed: scaffold.hideCurrentSnackBar),
+    ));
   }
 }

@@ -8,10 +8,10 @@ import 'package:http/http.dart';
 
 class UserClient {
   // url HP, di command aja jgn di hapus
-  static final String url = '10.5.2.41';
-  static final String endpoint = 'api_pbp_tubes_sewa_mobil/public/api';
-  // static const String url = '10.0.2.2:8000';
-  // static const String endpoint = '/api';
+  // static final String url = '192.168.100.14';
+  // static final String endpoint = 'api_pbp_tubes_sewa_mobil/public/api';
+  static final String url = '20.243.16.126:8000';
+  static const String endpoint = '/api';
 
   static Future<List<User>> fetchAll() async {
     try {
@@ -63,8 +63,7 @@ class UserClient {
 
   static Future<User?> login(String username, String password) async {
     try {
-      var response = await post(
-          Uri.http(url, 'api_pbp_tubes_sewa_mobil/public/api/login'),
+      var response = await post(Uri.http(url, '$endpoint/login'),
           body: {'username': username, 'password': password});
 
       if (response.statusCode != 200) throw Exception(response.reasonPhrase);

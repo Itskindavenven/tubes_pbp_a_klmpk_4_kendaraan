@@ -235,6 +235,12 @@ class _BookCarPageState extends State<BookCarPage> {
                       hintText: 'Select Your Location',
                       suffixIcon: Icon(Icons.location_on),
                     ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Lokasi tidak boleh kosong';
+                      }
+                      return null;
+                    },
                   ),
                 ],
               ),

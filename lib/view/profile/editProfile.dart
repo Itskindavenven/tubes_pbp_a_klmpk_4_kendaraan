@@ -104,7 +104,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 ],
               ),
               const SizedBox(height: 16.0),
-              Center(
+              const Center(
                 child: Column(
                   children: [
                     // CircleAvatar(
@@ -113,7 +113,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     // ),
                     SizedBox(height: 8.0),
                     Text(
-                      'Hello ${widget.userData['username']}',
+                      'Hello There!',
                       style: TextStyle(fontSize: 30),
                     ),
                     SizedBox(height: 4.0),
@@ -327,6 +327,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
               ElevatedButton(
                 onPressed: () {
                   updateProfile();
+                  showSnackBar(
+                      context, 'Berhasil Update Profile', Colors.green);
                 },
                 child: const Text('Update profile'),
               ),
@@ -370,14 +372,15 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   void updateProfile() async {
     User updatedUser = User(
-      id: widget.userData['id'],
-      username: usernameController.text,
-      email: emailController.text,
-      password: widget.userData['password'],
-      tglLahir: dobController.text,
-      noTelp: noTelpController.text,
-      // updated_at: Timestamp.now(),
-    );
+        id: widget.userData['id'],
+        username: usernameController.text,
+        email: emailController.text,
+        password: passwordController.text,
+        tglLahir: dobController.text,
+        noTelp: noTelpController.text,
+        image: widget.userData['image']
+        // updated_at: Timestamp.now(),
+        );
 
     try {
       await UserClient.update(updatedUser);
@@ -385,5 +388,15 @@ class _EditProfilePageState extends State<EditProfilePage> {
     } catch (e) {
       print('Error Updating Message : $e');
     }
+  }
+
+  void showSnackBar(BuildContext context, String msg, Color bg) {
+    final scaffold = ScaffoldMessenger.of(context);
+    scaffold.showSnackBar(SnackBar(
+      content: Text(msg),
+      backgroundColor: bg,
+      action: SnackBarAction(
+          label: 'hide', onPressed: scaffold.hideCurrentSnackBar),
+    ));
   }
 }
